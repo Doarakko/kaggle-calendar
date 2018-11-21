@@ -13,7 +13,7 @@ import gcalender_utility
 # logger
 # google calender作成utility
 # google calender取得utility
-
+# hoge
 
 def get_competition_list():
     api = KaggleApi()
