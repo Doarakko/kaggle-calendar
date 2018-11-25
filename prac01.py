@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from kaggle.api.kaggle_api_extended import KaggleApi
 
 import gcalender_utility
@@ -15,10 +14,11 @@ import gcalender_utility
 # google calender取得utility
 # hoge
 
-def get_competition_list():
-    api = KaggleApi()
-    api.authenticate()
+api = KaggleApi()
+api.authenticate()
 
+
+def get_competition_list():
     result = api.competitions_list()
 
     return result
@@ -46,9 +46,20 @@ def exists_gcalender(competition_name):
     print('hoge')
 
 
+def get_kernels_list(competition):
+    result = api.kernels_list(competition=competition)
+    return result
+
 def main():
-    competition_list = get_competition_list()
-    create_event(competition_list)
+    # competition_list = get_competition_list()
+    # print(competition_list[0])
+    # print(dir(competition_list[6]))
+    # print(getattr(competition_list[6], 'userRank'))
+    result = get_kernels_list('PLAsTiCC-2018')
+    print(result[0])
+    print(dir(result[0]))
+
+    # create_event(competition_list)
 
 
 main()
