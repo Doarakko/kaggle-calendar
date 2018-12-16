@@ -27,10 +27,8 @@ def get_competitions_list(category='featured'):
 
 
 def get_events_name():
-    now = datetime.datetime.utcnow().isoformat() + 'Z'
-    events_result = service.events().list(calendarId=CALENDER_ID, timeMin=now,
-                                          maxResults=10, singleEvents=True,
-                                          orderBy='startTime').execute()
+    now = datetime.datetime.utcnow().isoformat()
+    events_result = service.events().list(calendarId=CALENDER_ID, timeMin=now).execute()
     events = events_result.get('items', [])
 
     events_name = []
