@@ -1,4 +1,5 @@
-import requests
+from __future__ import print_function
+
 import json
 
 from kaggle.api.kaggle_api_extended import KaggleApi
@@ -12,10 +13,11 @@ from oauth2client import file, client, tools
 CALENDER_SCOPES = 'https://www.googleapis.com/auth/calendar'
 CALENDER_ID = 'rvilq00v5vsgdvpt5arso3d4m4@group.calendar.google.com'
 
-store = file.Storage('token.json')
+store = file.Storage('credentials/token.json')
 creds = store.get()
 if not creds or creds.invalid:
-    flow = client.flow_from_clientsecrets('./credentials.json', CALENDER_SCOPES)
+    flow = client.flow_from_clientsecrets(
+        './credentials/credentials.json', CALENDER_SCOPES)
     creds = tools.run_flow(flow, store)
 service = build('calendar', 'v3', http=creds.authorize(Http()))
 
@@ -27,8 +29,10 @@ def get_competitions_list(category='featured'):
 
 
 def get_events_name():
-    now = datetime.datetime.utcnow().isoformat()
-    events_result = service.events().list(calendarId=CALENDER_ID, timeMin=now).execute()
+    now = datetime.datetime.utcnow().isoformat() + 'Z'
+    events_result = service.events().list(calendarId='rvilq00v5vsgdvpt5arso3d4m4@group.calendar.google.com', timeMin=now,
+                                          maxResults=10, singleEvents=True,
+                                          orderBy='startTime').execute()
     events = events_result.get('items', [])
 
     events_name = []
