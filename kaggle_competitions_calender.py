@@ -23,8 +23,8 @@ service = build('calendar', 'v3', http=creds.authorize(Http()))
 
 def get_competitions_list(category='featured'):
     api = KaggleApi()
-    api.CONFIG_NAME_USER = os.environ['KAGGLE_NAME']
-    api.CONFIG_NAME_KEY = os.environ['KAGGLE_KEY']
+    api.CONFIG_NAME_USER = os.environ['KAGGLE_CONFIG_NAME_USER']
+    api.CONFIG_NAME_KEY = os.environ['KAGGLE_CONFIG_NAME_KEY']
     api.authenticate()
     return api.competitions_list(category=category)
 
