@@ -1,5 +1,4 @@
-from __future__ import print_function
-
+import os
 import json
 
 from kaggle.api.kaggle_api_extended import KaggleApi
@@ -24,6 +23,8 @@ service = build('calendar', 'v3', http=creds.authorize(Http()))
 
 def get_competitions_list(category='featured'):
     api = KaggleApi()
+    api.CONFIG_NAME_USER = os.environ['KAGGLE_NAME']
+    api.CONFIG_NAME_KEY = os.environ['KAGGLE_KEY']
     api.authenticate()
     return api.competitions_list(category=category)
 
