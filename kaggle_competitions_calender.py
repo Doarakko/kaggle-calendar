@@ -10,7 +10,7 @@ from httplib2 import Http
 from oauth2client import file, client, tools
 
 CALENDER_SCOPES = 'https://www.googleapis.com/auth/calendar'
-CALENDER_ID = 'rvilq00v5vsgdvpt5arso3d4m4@group.calendar.google.com'
+CALENDER_ID = 'fernk4og93701fo005rgp2kea4@group.calendar.google.com'
 
 store = file.Storage('credentials/token.json')
 creds = store.get()
@@ -27,9 +27,10 @@ def get_competitions_list(category='featured'):
     return api.competitions_list(category=category)
 
 
-def get_events_name():
+def get_event_name_list():
     now = datetime.datetime.utcnow().isoformat() + 'Z'
-    events_result = service.events().list(calendarId=CALENDER_ID).execute()
+    events_result = service.events().list(
+        calendarId=CALENDER_ID, timeMin=now).execute()
     events = events_result.get('items', [])
 
     events_name = []
@@ -40,31 +41,34 @@ def get_events_name():
 
 
 def create_events(competitions_list):
-    events_name = get_events_name()
-    if events_name is None:
+    event_name_list = get_event_name_list()
+    if event_name_list is None:
         return 0
 
     for competition_info in competitions_list:
-        competition_name = getattr(competition_info, 'ref')
+        competition_name = getattr(competition_info, 'title')
+
+        now = datetime.datetime.utcnow().isoformat()
+
+        end_date = getattr(competition_info, 'deadline')
+        end_date = timezone('UTC').localize(end_date)
+        end_date = end_date.isoformat()
 
         # 新規コンペの場合
-        if competition_name not in events_name:
-            # 大会 URL
-            competition_url = 'https://www.kaggle.com/c/' + competition_name
+        if competition_name not in event_name_list and now < end_date:
+            key_list = ['description', 'evaluationMetric', 'isKernelsSubmissionsOnly', 'tags', 'url']
+            description = ''
+            for key in dir(competition_info):
+                if key in key_list:
+                    description += '{}: {}\n'.format(key, getattr(competition_info, key))
 
-            # 開始日時
             start_date = getattr(competition_info, 'enabledDate')
             start_date = timezone('UTC').localize(start_date)
             start_date = start_date.isoformat()
 
-            # 終了日時
-            end_date = getattr(competition_info, 'deadline')
-            end_date = timezone('UTC').localize(end_date)
-            end_date = end_date.isoformat()
-
             body = {
                 'summary': competition_name,
-                'description': competition_url,
+                'description': description,
                 'start': {
                     'dateTime': start_date,
                     'timeZone': 'America/Los_Angeles',
