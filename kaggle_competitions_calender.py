@@ -16,24 +16,20 @@ store = file.Storage('credentials/token.json')
 creds = store.get()
 if not creds or creds.invalid:
     flow = client.flow_from_clientsecrets(
-        './credentials/credentials.json', CALENDER_SCOPES)
+        'credentials/credentials.json', CALENDER_SCOPES)
     creds = tools.run_flow(flow, store)
 service = build('calendar', 'v3', http=creds.authorize(Http()))
 
 
 def get_competitions_list(category='featured'):
     api = KaggleApi()
-    api.CONFIG_NAME_USER = os.environ['KAGGLE_CONFIG_NAME_USER']
-    api.CONFIG_NAME_KEY = os.environ['KAGGLE_CONFIG_NAME_KEY']
     api.authenticate()
     return api.competitions_list(category=category)
 
 
 def get_events_name():
     now = datetime.datetime.utcnow().isoformat() + 'Z'
-    events_result = service.events().list(calendarId='rvilq00v5vsgdvpt5arso3d4m4@group.calendar.google.com', timeMin=now,
-                                          maxResults=10, singleEvents=True,
-                                          orderBy='startTime').execute()
+    events_result = service.events().list(calendarId=CALENDER_ID).execute()
     events = events_result.get('items', [])
 
     events_name = []
@@ -45,6 +41,8 @@ def get_events_name():
 
 def create_events(competitions_list):
     events_name = get_events_name()
+    if events_name is None:
+        return 0
 
     for competition_info in competitions_list:
         competition_name = getattr(competition_info, 'ref')
@@ -81,6 +79,7 @@ def create_events(competitions_list):
                 'visibility': 'public',
             }
             event = service.events().insert(calendarId=CALENDER_ID, body=body).execute()
+            print('[Create] {}'.format(competition_name))
 
 
 def main():
