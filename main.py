@@ -55,11 +55,13 @@ def create_events(competitions_list):
 
         # 新規コンペの場合
         if competition_name not in event_name_list and now < end_date:
-            key_list = ['description', 'evaluationMetric', 'isKernelsSubmissionsOnly', 'tags', 'url']
+            key_list = ['description', 'evaluationMetric',
+                        'isKernelsSubmissionsOnly', 'tags', 'url']
             description = ''
             for key in dir(competition_info):
                 if key in key_list:
-                    description += '{}: {}\n'.format(key, getattr(competition_info, key))
+                    description += '{}: {}\n'.format(key,
+                                                     getattr(competition_info, key))
 
             start_date = getattr(competition_info, 'enabledDate')
             start_date = timezone('UTC').localize(start_date)
