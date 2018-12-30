@@ -13,10 +13,10 @@ CALENDER_ID = 'fernk4og93701fo005rgp2kea4@group.calendar.google.com'
 
 store = file.Storage('credentials/token.json')
 creds = store.get()
-if not creds or creds.invalid:
-    flow = client.flow_from_clientsecrets(
-        'credentials/credentials.json', CALENDER_SCOPES)
-    creds = tools.run_flow(flow, store)
+# if not creds or creds.invalid:
+#     flow = client.flow_from_clientsecrets(
+#         'credentials/credentials.json', CALENDER_SCOPES)
+#     creds = tools.run_flow(flow, store)
 service = build('calendar', 'v3', http=creds.authorize(Http()))
 
 
