@@ -106,3 +106,4 @@ venv.bak/
 # 
 credentials/
 hoge/
+.vscode/
