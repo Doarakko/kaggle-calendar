@@ -1,3 +1,4 @@
+from google_auth_oauthlib.flow import InstalledAppFlow, _RedirectWSGIApp
 import datetime
 import json
 import os
@@ -14,13 +15,13 @@ CALENDER_ID = 'fernk4og93701fo005rgp2kea4@group.calendar.google.com'
 
 import google.auth
 from google.oauth2 import service_account
-from google_auth_oauthlib.flow import InstalledAppFlow
 
 CONTENTS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
 CONTENTS = json.loads(CONTENTS)
 flow = InstalledAppFlow.from_client_config(client_config=CONTENTS, scopes=CALENDER_SCOPES)
-flow.fetch_token(
-    authorization_response='https://www.googleapis.com/oauth2/v3/token')
+wsgi_app = _RedirectWSGIApp(('The authentication flow has completed, you may close this window.'))
+authorization_response = wsgi_app.last_request_uri.replace('http', 'https')
+flow.fetch_token(authorization_response=authorization_response)
 CREDS = flow.credentials()
 SERVICE = build('calendar', 'v3', http=CREDS.authorize(Http()))
 
