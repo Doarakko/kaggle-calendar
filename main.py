@@ -11,15 +11,13 @@ from oauth2client import client
 CALENDER_SCOPES = 'https://www.googleapis.com/auth/calendar'
 CALENDER_ID = 'fernk4og93701fo005rgp2kea4@group.calendar.google.com'
 
-CONTENTS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
-# CREDS = client.Credentials.new_from_json(CONTENTS)
+
 import google.auth
 from google.oauth2 import service_account
-# CREDS, project_id = google.auth.default()
-credentials_raw = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
-service_account_info = json.loads(credentials_raw)
-CREDS = service_account.Credentials.from_service_account_info(
-    service_account_info)
+from google_auth_oauthlib.flow import InstalledAppFlow
+CONTENTS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+flow = InstalledAppFlow.from_client_config(client_config=CONTENTS, scopes=CALENDER_SCOPES)
+CREDS = flow.run_local_server()
 SERVICE = build('calendar', 'v3', http=CREDS.authorize(Http()))
 
 SLACK_WEBHOOK_URL = os.environ['SLACK_WEBHOOK_URL']
