@@ -15,7 +15,9 @@ CALENDER_ID = 'fernk4og93701fo005rgp2kea4@group.calendar.google.com'
 import google.auth
 from google.oauth2 import service_account
 from google_auth_oauthlib.flow import InstalledAppFlow
+
 CONTENTS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+CONTENTS = json.loads(CONTENTS)
 flow = InstalledAppFlow.from_client_config(client_config=CONTENTS, scopes=CALENDER_SCOPES)
 CREDS = flow.run_local_server()
 SERVICE = build('calendar', 'v3', http=CREDS.authorize(Http()))
