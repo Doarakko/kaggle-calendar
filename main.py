@@ -13,6 +13,8 @@ CONTENTS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
 CREDS = client.Credentials.new_from_json(CONTENTS)
 SERVICE = build('calendar', 'v3', http=CREDS.authorize(Http()))
 
+SLACK_WEBHOOK_URL = os.environ['SLACK_WEBHOOK_URL']
+
 
 def get_competitions_list(category='featured'):
     api = KaggleApi()
@@ -47,7 +49,9 @@ def create_events(competitions_list):
         end_date = timezone('UTC').localize(end_date)
         end_date = end_date.isoformat()
 
-        # 新規コンペの場合
+        # 新規コンペの場合にイベントを作成
+        # 開催中のコンペのみ作成
+        # 作成に成功した場合は Slack に通知
         if competition_name not in event_name_list and now < end_date:
             key_list = ['url']
             description = ''
@@ -77,7 +81,25 @@ def create_events(competitions_list):
                 'visibility': 'public',
             }
             event = SERVICE.events().insert(calendarId=CALENDER_ID, body=body).execute()
-            print('[Create] {}'.format(competition_name))
+            print(event)
+            competition_url = getattr(competition_info, 'url')
+            post_slack(competition_name, competition_url)
+
+
+def post_slack(competition_name, competition_url):
+    payload = {
+        'username': 'Kaggle Competition Calender',
+        'icon_url': 'https://pbs.twimg.com/profile_images/1146317507/twitter_400x400.png',
+        'attachments': [{
+            'fallback': 'Competition Launch',
+            'color': '#D00000',
+            'fields': [{
+                'title': competition_name,
+                'value': competition_url,
+            }]
+        }]
+    }
+    requests.post(SLACK_WEBHOOK_URL, data=json.dumps(payload))
 
 
 def main():
