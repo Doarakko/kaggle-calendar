@@ -1,30 +1,17 @@
-import json
-from google.oauth2 import service_account
-import os
-
-from kaggle.api.kaggle_api_extended import KaggleApi
-
 import datetime
+import os
+from kaggle.api.kaggle_api_extended import KaggleApi
 from pytz import timezone
 from googleapiclient.discovery import build
 from httplib2 import Http
-from oauth2client import file, client, tools
+from oauth2client import client
 
 CALENDER_SCOPES = 'https://www.googleapis.com/auth/calendar'
 CALENDER_ID = 'fernk4og93701fo005rgp2kea4@group.calendar.google.com'
 
-
-# store = file.Storage('credentials/token.json')
-# creds = store.get()
-# if not creds or creds.invalid:
-#     flow = client.flow_from_clientsecrets(
-#         'credentials/credentials.json', CALENDER_SCOPES)
-#     creds = tools.run_flow(flow, store)
-creds = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
-# creds = json.loads(credentials_raw)
-# creds = client.Credentials.to_json(creds)
-creds = client.Credentials.new_from_json(creds)
-service = build('calendar', 'v3', http=creds.authorize(Http()))
+CONTENTS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+CREDS = client.Credentials.new_from_json(CONTENTS)
+SERVICE = build('calendar', 'v3', http=CREDS.authorize(Http()))
 
 
 def get_competitions_list(category='featured'):
@@ -35,7 +22,7 @@ def get_competitions_list(category='featured'):
 
 def get_event_name_list():
     now = datetime.datetime.utcnow().isoformat() + 'Z'
-    events_result = service.events().list(
+    events_result = SERVICE.events().list(
         calendarId=CALENDER_ID, timeMin=now).execute()
     events = events_result.get('items', [])
 
@@ -89,7 +76,7 @@ def create_events(competitions_list):
                 },
                 'visibility': 'public',
             }
-            event = service.events().insert(calendarId=CALENDER_ID, body=body).execute()
+            event = SERVICE.events().insert(calendarId=CALENDER_ID, body=body).execute()
             print('[Create] {}'.format(competition_name))
 
 
