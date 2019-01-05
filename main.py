@@ -19,7 +19,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 CONTENTS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
 CONTENTS = json.loads(CONTENTS)
 flow = InstalledAppFlow.from_client_config(client_config=CONTENTS, scopes=CALENDER_SCOPES)
-flow.fetch_token('https://www.googleapis.com/oauth2/v3/token')
+flow.fetch_token(code='https://www.googleapis.com/oauth2/v3/token')
 CREDS = flow.credentials()
 SERVICE = build('calendar', 'v3', http=CREDS.authorize(Http()))
 
