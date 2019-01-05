@@ -20,7 +20,7 @@ CONTENTS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
 CONTENTS = json.loads(CONTENTS)
 flow = InstalledAppFlow.from_client_config(client_config=CONTENTS, scopes=CALENDER_SCOPES)
 wsgi_app = _RedirectWSGIApp(('The authentication flow has completed, you may close this window.'))
-authorization_response = wsgi_app.last_request_uri.replace('http', 'https')
+authorization_response = wsgi_app.last_request_uri
 flow.fetch_token(authorization_response=authorization_response)
 CREDS = flow.credentials()
 SERVICE = build('calendar', 'v3', http=CREDS.authorize(Http()))
