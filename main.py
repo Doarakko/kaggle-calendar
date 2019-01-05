@@ -83,14 +83,14 @@ def create_events(competitions_list):
                 'visibility': 'public',
             }
             event = SERVICE.events().insert(calendarId=CALENDER_ID, body=body).execute()
-            print(event)
+
             competition_url = getattr(competition_info, 'url')
             post_slack(competition_name, competition_url)
 
 
 def post_slack(competition_name, competition_url):
     payload = {
-        'username': 'Kaggle Competition Calender',
+        'username': 'Kaggle Competitions Calender',
         'icon_url': 'https://pbs.twimg.com/profile_images/1146317507/twitter_400x400.png',
         'attachments': [{
             'fallback': 'Competition Launch',
