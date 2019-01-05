@@ -1,3 +1,5 @@
+import json
+from google.oauth2 import service_account
 import os
 
 from kaggle.api.kaggle_api_extended import KaggleApi
@@ -18,8 +20,10 @@ CALENDER_ID = 'fernk4og93701fo005rgp2kea4@group.calendar.google.com'
 #     flow = client.flow_from_clientsecrets(
 #         'credentials/credentials.json', CALENDER_SCOPES)
 #     creds = tools.run_flow(flow, store)
-store = file.Storage('credentials/token.json')
-creds = store.get()
+credentials_raw = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+service_account_info = json.loads(credentials_raw)
+creds = service_account.Credentials.from_service_account_info(
+    service_account_info)
 service = build('calendar', 'v3', http=creds.authorize(Http()))
 
 
@@ -58,8 +62,7 @@ def create_events(competitions_list):
 
         # 新規コンペの場合
         if competition_name not in event_name_list and now < end_date:
-            key_list = ['description', 'evaluationMetric',
-                        'isKernelsSubmissionsOnly', 'tags', 'url']
+            key_list = ['url']
             description = ''
             for key in dir(competition_info):
                 if key in key_list:
