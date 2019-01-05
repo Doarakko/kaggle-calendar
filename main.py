@@ -22,7 +22,7 @@ CALENDER_ID = 'fernk4og93701fo005rgp2kea4@group.calendar.google.com'
 #     creds = tools.run_flow(flow, store)
 creds = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
 # creds = json.loads(credentials_raw)
-creds = client.Credentials.to_json(creds)
+# creds = client.Credentials.to_json(creds)
 creds = client.Credentials.new_from_json(creds)
 service = build('calendar', 'v3', http=creds.authorize(Http()))
 
