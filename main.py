@@ -12,7 +12,9 @@ CALENDER_SCOPES = 'https://www.googleapis.com/auth/calendar'
 CALENDER_ID = 'fernk4og93701fo005rgp2kea4@group.calendar.google.com'
 
 CONTENTS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
-CREDS = client.Credentials.new_from_json(CONTENTS)
+# CREDS = client.Credentials.new_from_json(CONTENTS)
+import google.auth
+CREDS, project_id = google.auth.default()
 SERVICE = build('calendar', 'v3', http=CREDS.authorize(Http()))
 
 SLACK_WEBHOOK_URL = os.environ['SLACK_WEBHOOK_URL']
