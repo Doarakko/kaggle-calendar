@@ -85,7 +85,6 @@ def create_events(competitions_list):
             event = SERVICE.events().insert(calendarId=CALENDER_ID, body=body).execute()
 
             competition_url = getattr(competition_info, 'url')
-            print(competition_url)
             post_slack(competition_name, competition_url)
 
 
