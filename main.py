@@ -55,12 +55,14 @@ def create_events(competitions_list):
         # 開催中のコンペのみ作成
         # 作成に成功した場合は Slack に通知
         if competition_name not in event_name_list and now < end_date:
-            key_list = ['url']
-            description = ''
-            for key in dir(competition_info):
-                if key in key_list:
-                    description += '{}: {}\n'.format(key,
-                                                     getattr(competition_info, key))
+            # key_list = ['description', 'evaluationMetric', 'isKernelsSubmissionsOnly', 'tags', 'url']
+            # description = ''
+            # for key in dir(competition_info):
+            #     if key in key_list:
+            #         description += '{}: {}\n'.format(key,
+            #                                             getattr(competition_info, key))
+            competition_url = getattr(competition_info, 'url')
+            competition_url = competition_url.replace(':80', '')
 
             start_date = getattr(competition_info, 'enabledDate')
             start_date = timezone('UTC').localize(start_date)
@@ -84,7 +86,6 @@ def create_events(competitions_list):
             }
             event = SERVICE.events().insert(calendarId=CALENDER_ID, body=body).execute()
 
-            competition_url = getattr(competition_info, 'url')
             post_slack(competition_name, competition_url)
 
 
