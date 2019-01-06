@@ -56,13 +56,14 @@ def create_events(competitions_list):
         # 作成に成功した場合は Slack に通知
         if competition_name not in event_name_list and now < end_date:
             # key_list = ['description', 'evaluationMetric', 'isKernelsSubmissionsOnly', 'tags', 'url']
-            # description = ''
+            # competition_description = ''
             # for key in dir(competition_info):
             #     if key in key_list:
-            #         description += '{}: {}\n'.format(key,
+            #         competition_description += '{}: {}\n'.format(key,
             #                                             getattr(competition_info, key))
-            competition_url = getattr(competition_info, 'url')
-            competition_url = competition_url.replace(':80', '')
+            competition_description = getattr(competition_info, 'url')
+            competition_description = competition_description.replace(
+                ':80', '')
 
             start_date = getattr(competition_info, 'enabledDate')
             start_date = timezone('UTC').localize(start_date)
@@ -70,7 +71,7 @@ def create_events(competitions_list):
 
             body = {
                 'summary': competition_name,
-                'description': description,
+                'description': competition_description,
                 'start': {
                     'dateTime': start_date,
                     'timeZone': 'America/Los_Angeles',
@@ -86,10 +87,10 @@ def create_events(competitions_list):
             }
             event = SERVICE.events().insert(calendarId=CALENDER_ID, body=body).execute()
 
-            post_slack(competition_name, competition_url)
+            post_slack(competition_name, description)
 
 
-def post_slack(competition_name, competition_url):
+def post_slack(competition_name, competition_description):
     payload = {
         'username': 'Kaggle Competitions Calender',
         'icon_url': 'https://pbs.twimg.com/profile_images/1146317507/twitter_400x400.png',
@@ -98,7 +99,7 @@ def post_slack(competition_name, competition_url):
             'color': '#D00000',
             'fields': [{
                 'title': competition_name,
-                'value': competition_url,
+                'value': competition_description,
             }]
         }]
     }
