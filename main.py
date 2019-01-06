@@ -1,7 +1,8 @@
-from google_auth_oauthlib.flow import InstalledAppFlow, _RedirectWSGIApp
-import datetime
 import json
 import os
+import google.auth
+from google_auth_oauthlib.flow import InstalledAppFlow
+import datetime
 import requests
 from kaggle.api.kaggle_api_extended import KaggleApi
 from pytz import timezone
@@ -12,16 +13,11 @@ from oauth2client import client
 CALENDER_SCOPES = 'https://www.googleapis.com/auth/calendar'
 CALENDER_ID = 'fernk4og93701fo005rgp2kea4@group.calendar.google.com'
 
-
-import google.auth
-from google.oauth2 import service_account
-
 CONTENTS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
 CONTENTS = json.loads(CONTENTS)
-flow = InstalledAppFlow.from_client_config(client_config=CONTENTS, scopes=CALENDER_SCOPES)
-wsgi_app = _RedirectWSGIApp(('The authentication flow has completed, you may close this window.'))
-authorization_response = wsgi_app.last_request_uri
-flow.fetch_token(authorization_response=authorization_response)
+flow = InstalledAppFlow.from_client_config(
+    client_config=CONTENTS, scopes=CALENDER_SCOPES)
+flow.fetch_token()
 CREDS = flow.credentials()
 SERVICE = build('calendar', 'v3', http=CREDS.authorize(Http()))
 
