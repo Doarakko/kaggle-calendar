@@ -87,7 +87,7 @@ def create_events(competitions_list):
             }
             event = SERVICE.events().insert(calendarId=CALENDER_ID, body=body).execute()
 
-            post_slack(competition_name, description)
+            post_slack(competition_name, competition_description)
 
 
 def post_slack(competition_name, competition_description):
