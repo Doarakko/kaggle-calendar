@@ -1,11 +1,9 @@
-import json
 import os
-import google.auth
-from google_auth_oauthlib.flow import InstalledAppFlow
+import json
 import datetime
+from pytz import timezone
 import requests
 from kaggle.api.kaggle_api_extended import KaggleApi
-from pytz import timezone
 from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import client
@@ -14,11 +12,7 @@ CALENDER_SCOPES = 'https://www.googleapis.com/auth/calendar'
 CALENDER_ID = 'fernk4og93701fo005rgp2kea4@group.calendar.google.com'
 
 CONTENTS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
-CONTENTS = json.loads(CONTENTS)
-flow = InstalledAppFlow.from_client_config(
-    client_config=CONTENTS, scopes=CALENDER_SCOPES)
-flow.fetch_token()
-CREDS = flow.credentials()
+CREDS = client.Credentials.new_from_json(CONTENTS)
 SERVICE = build('calendar', 'v3', http=CREDS.authorize(Http()))
 
 SLACK_WEBHOOK_URL = os.environ['SLACK_WEBHOOK_URL']
