@@ -1,0 +1,16 @@
+{
+        "username": "Kaggle Competitions Calender",
+        "icon_url": "https: //pbs.twimg.com/profile_images/1146317507/twitter_400x400.png",
+        "attachments": [
+        {
+            "fallback": "Competition Launch",
+            "color": "#D00000",
+            "fields": [
+                {
+                "title": null,
+                "value": null
+                }
+            ]
+        }
+    ]
+}
