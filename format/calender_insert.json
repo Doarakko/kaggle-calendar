@@ -1,0 +1,16 @@
+{
+    "summary": null,
+    "description": null,
+    "start": {
+        "dateTime": null,
+        "timeZone": "America/Los_Angeles"
+    },
+    "end": {
+        "dateTime": null,
+        "timeZone": "America/Los_Angeles"
+    },
+        "reminders": {
+        "useDefault": false
+    },
+        "visibility": "public"
+}
