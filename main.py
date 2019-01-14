@@ -9,20 +9,23 @@ from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import client, file
 
+# Remove comment out on local
+# import config
+
 LOGGER = getLogger(__name__)
 
-LOCAL = True
+LOCAL = False
 
 if LOCAL:
     STORE = file.Storage('credentials/token.json')
     CREDS = STORE.get()
     SERVICE = build('calendar', 'v3', http=CREDS.authorize(Http()))
-    SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/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'
 else:
     CONTENTS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
     CREDS = client.Credentials.new_from_json(CONTENTS)
     SERVICE = build('calendar', 'v3', http=CREDS.authorize(Http()))
-    SLACK_WEBHOOK_URL = os.environ.get['SLACK_WEBHOOK_URL']
+
+SLACK_WEBHOOK_URL = os.environ.get['SLACK_WEBHOOK_URL']
 
 
 def open_json(path):
