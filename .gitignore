@@ -109,3 +109,4 @@ hoge/
 .vscode/
 node_modules/
 package-lock.json
+config.py
