@@ -1,6 +1,17 @@
+body{
+    background-color: rgba(197, 237, 255, 0.959)
+}
+
+.link{
+    text-align: right;
+    color: #565656;
+    padding: 4px 10px;
+}
+
 h1{
     text-align: center;
     color: #565656;
+    margin-top: 2px;
 }
 
 iframe{
@@ -12,9 +23,10 @@ iframe{
 .tabs {
     margin-top: 50px;
     padding-bottom: 40px;
-    background-color: #fff;
+    background-color: rgb(235, 255, 250);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    width: 1200px;
+    width: 90%;
+    height: 600px;
     margin: 0 auto;
 }
 
@@ -46,7 +58,7 @@ input[name="tab_item"] {
 /*タブ切り替えの中身のスタイル*/
 .tab_content {
     display: none;
-    padding: 50px 100px 0;
+    padding: 20px 20px 0;
     clear: both;
     overflow: hidden;
 }
