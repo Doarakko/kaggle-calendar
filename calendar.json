@@ -1,0 +1,42 @@
+{
+    "all": {
+        "calendar_id": "4mob9dbhsikddor61vdiegn4fk@group.calendar.google.com",
+        "category": null,
+        "reward_only": false
+    },
+    "awards_points": {
+        "calendar_id": "fernk4og93701fo005rgp2kea4@group.calendar.google.com",
+        "category": null,
+        "reward_only": false
+    },
+    "reward": {
+        "calendar_id": "6ba06879lpr885v3pumbs0l2r4@group.calendar.google.com",
+        "category": null,
+        "reward_only": true
+    },
+    "featured": {
+        "calendar_id": "k58oh36g2bis0pivj4mgha1mp4@group.calendar.google.com",
+        "category": "Featured",
+        "reward_only": false
+    },
+    "research": {
+        "calendar_id": "kpa6gf1lc87p3jvs9ndbqflq50@group.calendar.google.com",
+        "category": "Research",
+        "reward_only": false
+    },
+    "getting_started": {
+        "calendar_id": "i0e6mb9qi16q9gj691r4j1v9pk@group.calendar.google.com",
+        "category": "Getting Started",
+        "reward_only": false
+    },
+    "playground": {
+        "calendar_id": "htq3gktaqds2vdr8espmkomauk@group.calendar.google.com",
+        "category": "Playground",
+        "reward_only": false
+    },
+    "mycomp": {
+        "calendar_id": "",
+        "category": null,
+        "reward_only": false
+    }
+}
