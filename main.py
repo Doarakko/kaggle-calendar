@@ -42,7 +42,7 @@ def open_json(path):
     return f_json
 
 
-CALENDER_JSON = open_json('calender.json')
+CALENDAR_JSON = open_json('calendar.json')
 
 
 def get_competitions_list():
@@ -57,18 +57,18 @@ def get_competitions_list():
 def create_events(competitions_list):
     for competition_info in competitions_list:
         created_flg = False
-        calender_id_list = get_calender_id_list(competition_info)
+        calendar_id_list = get_calendar_id_list(competition_info)
 
-        for calender_id in calender_id_list:
+        for calendar_id in calendar_id_list:
             try:
                 competition_name = getattr(competition_info, 'title')
-                if not event_exists(calender_id, competition_name):
-                    body = get_calender_body(competition_info)
-                    event = SERVICE.events().insert(calendarId=calender_id, body=body).execute()
+                if not event_exists(calendar_id, competition_name):
+                    body = get_calendar_body(competition_info)
+                    event = SERVICE.events().insert(calendarId=calendar_id, body=body).execute()
                     created_flg = True
 
                     msg = 'Create event. calendar id: {}, competitions name: {}'.format(
-                        calender_id, competition_name)
+                        calendar_id, competition_name)
                     LOGGER.debug(msg)
             except Exception as e:
                 LOGGER.error(e)
@@ -77,11 +77,11 @@ def create_events(competitions_list):
             post_slack(competition_info)
 
 
-def get_event_name_list(calender_id=CALENDER_JSON['all']['calender_id']):
+def get_event_name_list(calendar_id=CALENDAR_JSON['all']['calendar_id']):
     now = datetime.datetime.utcnow().isoformat() + 'Z'
     try:
         result = SERVICE.events().list(
-            calendarId=calender_id, timeMin=now).execute()
+            calendarId=calendar_id, timeMin=now).execute()
         event_list = result.get('items', [])
 
         events_name = []
@@ -92,9 +92,9 @@ def get_event_name_list(calender_id=CALENDER_JSON['all']['calender_id']):
         LOGGER.error(e)
 
 
-def event_exists(calender_id, q):
+def event_exists(calendar_id, q):
     try:
-        result = SERVICE.events().list(calendarId=calender_id, q=q,
+        result = SERVICE.events().list(calendarId=calendar_id, q=q,
                                        timeMin=datetime.datetime.utcnow().isoformat()+'Z').execute()
         if not result['items']:
             return False
@@ -104,28 +104,28 @@ def event_exists(calender_id, q):
         LOGGER.error(e)
 
 
-def get_calender_id_list(info):
-    id_list = [CALENDER_JSON['all']['calender_id']]
+def get_calendar_id_list(info):
+    id_list = [CALENDAR_JSON['all']['calendar_id']]
     awards_points = getattr(info, 'awardsPoints')
     category = getattr(info, 'category')
     reward = getattr(info, 'reward')
 
     if awards_points:
-        id_list.append(CALENDER_JSON['awards_points']['calender_id'])
+        id_list.append(CALENDAR_JSON['awards_points']['calendar_id'])
     if reward.find('$') != -1:
-        id_list.append(CALENDER_JSON['reward']['calender_id'])
+        id_list.append(CALENDAR_JSON['reward']['calendar_id'])
 
-    if category == CALENDER_JSON['featured']['category']:
-        id_list.append(CALENDER_JSON['featured']['calender_id'])
+    if category == CALENDAR_JSON['featured']['category']:
+        id_list.append(CALENDAR_JSON['featured']['calendar_id'])
 
-    elif category == CALENDER_JSON['research']['category']:
-        id_list.append(CALENDER_JSON['research']['calender_id'])
+    elif category == CALENDAR_JSON['research']['category']:
+        id_list.append(CALENDAR_JSON['research']['calendar_id'])
 
-    elif category == CALENDER_JSON['getting_started']['category']:
-        id_list.append(CALENDER_JSON['getting_started']['calender_id'])
+    elif category == CALENDAR_JSON['getting_started']['category']:
+        id_list.append(CALENDAR_JSON['getting_started']['calendar_id'])
 
-    elif category == CALENDER_JSON['playground']['category']:
-        id_list.append(CALENDER_JSON['playground']['calender_id'])
+    elif category == CALENDAR_JSON['playground']['category']:
+        id_list.append(CALENDAR_JSON['playground']['calendar_id'])
 
     else:
         try:
@@ -137,7 +137,7 @@ def get_calender_id_list(info):
     return id_list
 
 
-def get_calender_body(info):
+def get_calendar_body(info):
     summary = getattr(info, 'title')
 
     # key_list = ['description', 'evaluationMetric', 'isKernelsSubmissionsOnly', 'tags', 'url']
@@ -157,7 +157,7 @@ def get_calender_body(info):
     end_date = timezone('UTC').localize(end_date)
     end_date = end_date.isoformat()
 
-    body = open_json('format/calender_insert.json')
+    body = open_json('format/calendar_insert.json')
 
     body['summary'] = summary
     body['description'] = description
@@ -198,5 +198,6 @@ def main():
 
     competitions_list = get_competitions_list()
     create_events(competitions_list)
+
 
 main()
