@@ -9,14 +9,13 @@ from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import client, file
 
-# Remove comment out on local
-# import config
 
 LOGGER = getLogger(__name__)
 
 LOCAL = False
 
 if LOCAL:
+    import config
     STORE = file.Storage('credentials/token.json')
     CREDS = STORE.get()
     SERVICE = build('calendar', 'v3', http=CREDS.authorize(Http()))
