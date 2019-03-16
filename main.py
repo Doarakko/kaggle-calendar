@@ -1,6 +1,6 @@
 import os
 import json
-from datetime import datetime
+import datetime
 from pytz import timezone
 from logging import StreamHandler, DEBUG, Formatter, FileHandler, getLogger
 import requests
@@ -49,11 +49,13 @@ def get_competitions_list():
         api = KaggleApi()
         api.authenticate()
 
-        now = datetime.utcnow().isoformat() + 'Z'
+        now = datetime.datetime.utcnow().isoformat() + 'Z'
+
         competitions_info = []
         for info in api.competitions_list():
             deadline = getattr(info, 'deadline')
-            deadline = datetime.strftime(deadline, '%Y-%m-%d %H:%M:%S')
+            deadline = datetime.datetime.strftime(
+                deadline, '%Y-%m-%d %H:%M:%S')
             if now <= deadline:
                 competitions_info.append(info)
         return competitions_info
@@ -85,7 +87,8 @@ def create_events(competitions_list):
 
 
 def get_event_name_list(calendar_id=CALENDAR_JSON['all']['calendar_id']):
-    now = datetime.utcnow().isoformat() + 'Z'
+    now = datetime.datetime.utcnow().isoformat() + 'Z'
+
     try:
         result = SERVICE.events().list(
             calendarId=calendar_id, timeMin=now).execute()
@@ -101,8 +104,12 @@ def get_event_name_list(calendar_id=CALENDAR_JSON['all']['calendar_id']):
 
 def event_exists(calendar_id, q):
     try:
-        result = SERVICE.events().list(calendarId=calendar_id, q=q,
-                                       timeMin=datetime.utcnow().isoformat()+'Z').execute()
+        now = datetime.datetime.utcnow()
+        # avoid make 2 events in 2 stage competition
+        last_week = now - datetime.timedelta(days=7)
+        last_week = last_week.isoformat() + 'Z'
+        result = SERVICE.events().list(calendarId=calendar_id,
+                                       q=q, timeMin=last_week).execute()
         if not result['items']:
             return False
         else:
