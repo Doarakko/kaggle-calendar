@@ -1,42 +1,58 @@
 {
     "all": {
-        "calendar_id": "4mob9dbhsikddor61vdiegn4fk@group.calendar.google.com",
-        "category": null,
-        "reward_only": false
+        "id": "4mob9dbhsikddor61vdiegn4fk@group.calendar.google.com",
+        "name": "all",
+        "data": null,
+        "colorId_1": "1",
+        "colorId_2": "2"
     },
     "awards_points": {
-        "calendar_id": "fernk4og93701fo005rgp2kea4@group.calendar.google.com",
-        "category": null,
-        "reward_only": false
+        "id": "fernk4og93701fo005rgp2kea4@group.calendar.google.com",
+        "name": "awards_points",
+        "data": null,
+        "colorId_1": "3",
+        "colorId_2": "4"
     },
-    "reward": {
-        "calendar_id": "6ba06879lpr885v3pumbs0l2r4@group.calendar.google.com",
-        "category": null,
-        "reward_only": true
+    "tabular": {
+        "id": "6ba06879lpr885v3pumbs0l2r4@group.calendar.google.com",
+        "name": "tabular",
+        "data": "tabular data",
+        "colorId_1": "5",
+        "colorId_2": "6"
     },
-    "featured": {
-        "calendar_id": "k58oh36g2bis0pivj4mgha1mp4@group.calendar.google.com",
-        "category": "Featured",
-        "reward_only": false
+    "text": {
+        "id": "k58oh36g2bis0pivj4mgha1mp4@group.calendar.google.com",
+        "name": "text",
+        "data": "text data",
+        "colorId_1": "7",
+        "colorId_2": "8"
     },
-    "research": {
-        "calendar_id": "kpa6gf1lc87p3jvs9ndbqflq50@group.calendar.google.com",
-        "category": "Research",
-        "reward_only": false
+    "image": {
+        "id": "kpa6gf1lc87p3jvs9ndbqflq50@group.calendar.google.com",
+        "name": "image",
+        "data": "image data",
+        "colorId_1": "9",
+        "colorId_2": "10"
     },
-    "getting_started": {
-        "calendar_id": "i0e6mb9qi16q9gj691r4j1v9pk@group.calendar.google.com",
-        "category": "Getting Started",
-        "reward_only": false
+    "audio": {
+        "id": "i0e6mb9qi16q9gj691r4j1v9pk@group.calendar.google.com",
+        "name": "audio",
+        "data": "audio data",
+        "colorId_1": "11",
+        "colorId_2": "12"
     },
-    "playground": {
-        "calendar_id": "htq3gktaqds2vdr8espmkomauk@group.calendar.google.com",
-        "category": "Playground",
-        "reward_only": false
+    "hoge": {
+        "id": "htq3gktaqds2vdr8espmkomauk@group.calendar.google.com",
+        "name": null,        
+        "data": null,
+        "colorId_1": "13",
+        "colorId_2": "14"
     },
-    "mycomp": {
-        "calendar_id": "",
-        "category": null,
-        "reward_only": false
+    "hoge2": {
+        "id": "",
+        "name": null,
+        "data": null,
+        "colorId_1": "15",
+        "colorId_2": "16"
     }
 }
