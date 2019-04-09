@@ -1,26 +1,11 @@
 {
     "name": "Kaggle Calendar",
+    "description": "Kaggle Competitions Google Calendar",
+    "repository": "https://github.com/Doarakko/kaggle-calendar",
+    "logo": "https://avatars0.githubusercontent.com/u/1336944",
     "keywords": [
         "kaggle",
         "calendar",
         "competition"
-    ],
-    "website": "https://kaggle-calendar.herokuapp.com/",
-    "repository": "https://github.com/Doarakko/kaggle-calendar",
-    "logo": "https://avatars0.githubusercontent.com/u/1336944",
-    "image": "heroku/python",
-    "addons": [
-        "scheduler",
-        {
-            "plan": "standard",
-        }
-    ],
-    "buildpacks": [
-        {
-            "url": "https://github.com/heroku/heroku-buildpack-python"
-        },
-        {
-            "url": "https://github.com/heroku/heroku-buildpack-nodejs"
-        }
     ]
 }
