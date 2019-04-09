@@ -1,5 +1,8 @@
 # [Kaggle Calendar](https://kaggle-calendar.herokuapp.com/)
+[![CircleCI](https://circleci.com/gh/Doarakko/kaggle-calendar.svg?style=svg)](https://circleci.com/gh/Doarakko/kaggle-calendar)
+
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
 ## Requirements
 - Python 3
 - pip
