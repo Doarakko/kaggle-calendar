@@ -12,5 +12,6 @@
         "reminders": {
         "useDefault": false
     },
-        "visibility": "public"
+    "colorId": null,
+    "visibility": "public"
 }
