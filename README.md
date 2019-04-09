@@ -1,4 +1,4 @@
-# [aggle Calendar](https://kaggle-calendar.herokuapp.com/)
+# [Kaggle Calendar](https://kaggle-calendar.herokuapp.com/)
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 ## Requirements
 - Python 3
