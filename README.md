@@ -1,4 +1,4 @@
-# [Kaggle Calendar](https://kaggle-competitions-calendar.herokuapp.com/)
+# [aggle Calendar](https://kaggle-calendar.herokuapp.com/)
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 ## Requirements
 - Python 3
@@ -36,8 +36,8 @@
 ## Usage
 ### 1. Download code
 ```
-$ git clone https://github.com/Doarakko/kaggle-competitions-calendar
-$ cd kaggle-competitions-calendar
+$ git clone https://github.com/Doarakko/kaggle-calendar
+$ cd kaggle-calendar
 ```
 ### 2. Install Python library
 ```
