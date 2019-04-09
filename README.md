@@ -1,4 +1,5 @@
-# [kaggle-competitions-calendar](https://kaggle-competitions-calendar.herokuapp.com/)
+# [Kaggle Calendar](https://kaggle-competitions-calendar.herokuapp.com/)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 ## Requirements
 - Python 3
 - pip
