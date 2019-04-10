@@ -32,7 +32,7 @@ iframe{
 
 /*タブのスタイル*/
 .tab_item {
-    width: calc(100%/6);
+    width: calc(100%/7);
     height: 50px;
     border-bottom: 3px solid #5ab4bd;
     background-color: #d9d9d9;
@@ -70,6 +70,7 @@ input[name="tab_item"] {
 #text:checked ~ #text_content,
 #image:checked ~ #image_content,
 #audio:checked ~ #audio_content,
+#etc:checked ~ #etc_content,
 #awards_points:checked ~ #awards_points_content {
     display: block;
 }
