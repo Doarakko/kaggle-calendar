@@ -8,5 +8,34 @@
         "calendar",
         "google",
         "competition"
-    ]
+    ],
+        "env": {
+            "SLACK_WEBHOOK_URL": {
+                "description": "You only need to enter slack or line.",
+                "value": "your webhook url"
+            },
+            "GOOGLE_APPLICATION_CREDENTIALS": {
+                "description": "Get in Google Cloud console",
+                "value": "json format"
+            },
+            "KAGGLE_KEY": {
+                "description": "kaggle key",
+                "value": "your key"
+            },
+            "KAGGLE_USERNAME": {
+                "description": "kaggle username",
+                "value": "your username"
+            }
+        },
+        "buildpacks": [
+            {
+                "url": "https://github.com/heroku/heroku-buildpack-python"
+            },
+            {
+                "url": "https://github.com/heroku/heroku-buildpack-nodejs"
+            }
+        ],
+        "addons": [
+            "scheduler"
+        ]
 }
