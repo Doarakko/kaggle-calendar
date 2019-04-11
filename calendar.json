@@ -41,18 +41,11 @@
         "colorId_1": "11",
         "colorId_2": "12"
     },
-    "hoge": {
+    "etc": {
         "id": "htq3gktaqds2vdr8espmkomauk@group.calendar.google.com",
-        "name": null,        
-        "data": null,
-        "colorId_1": "13",
-        "colorId_2": "14"
-    },
-    "hoge2": {
-        "id": "",
-        "name": null,
-        "data": null,
-        "colorId_1": "15",
-        "colorId_2": "16"
+        "name": "etc",
+        "data": "etc data",
+        "colorId_1": "1",
+        "colorId_2": "2"
     }
 }

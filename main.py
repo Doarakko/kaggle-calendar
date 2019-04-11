@@ -81,7 +81,7 @@ def create_events(competitions_list):
                         calendar_id, competition_name)
                     LOGGER.debug(msg)
                 except Exception as e:
-                    LOGGER.error(e)
+                    LOGGER.error('{}: {}\n{}'.format(calendar_name, body, e))
 
         if created_flg:
             post_slack(competition_info)
@@ -126,13 +126,21 @@ def get_calendar_list(info):
     awards_points = getattr(info, 'awardsPoints')
     if awards_points:
         calendar_list.append(CALENDAR_JSON['awards_points']['name'])
+    else:
+        return calendar_list
 
     # Class Tag convert to str
     tags = [str(tag) for tag in getattr(info, 'tags')]
 
+    # tabular / text / image / audio
+    is_etc_data = True
     for calendar in CALENDAR_JSON:
-        if awards_points and CALENDAR_JSON[calendar]['data'] in tags:
+        if CALENDAR_JSON[calendar]['data'] in tags:
             calendar_list.append(CALENDAR_JSON[calendar]['name'])
+            is_etc_data = False
+
+    if is_etc_data:
+        calendar_list.append(CALENDAR_JSON['etc']['name'])
 
     return calendar_list
 
@@ -191,11 +199,14 @@ def post_slack(info):
 
 
 def deleteAllEvent(calendar_id):
-    result = SERVICE.events().list(calendarId=calendar_id).execute()
-    for event in result['items']:
-        result = SERVICE.events().delete(
-            calendarId=calendar_id, eventId=event['id']).execute()
+    try:
+        result = SERVICE.events().list(calendarId=calendar_id).execute()
+        for event in result['items']:
+            result = SERVICE.events().delete(
+                calendarId=calendar_id, eventId=event['id']).execute()
         print('delete: {}'.format(event['id']))
+    except Exception as e:
+        print('{}: {}'.format(calendar_id, e))
 
 
 def main():
@@ -217,4 +228,5 @@ def main():
 
 main()
 # for i in CALENDAR_JSON:
-#     deleteAllEvent(CALENDAR_JSON[i]['id'])
+# print(CALENDAR_JSON[i]['id'])
+# deleteAllEvent(CALENDAR_JSON[i]['id'])
