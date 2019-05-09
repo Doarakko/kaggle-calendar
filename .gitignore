@@ -104,9 +104,8 @@ venv.bak/
 .mypy_cache/
 
 # 
+local/
 credentials/
-hoge/
 .vscode/
 node_modules/
 package-lock.json
-config.py
