@@ -1,30 +1,36 @@
 import os
 import json
 import datetime
-from pytz import timezone
-from logging import StreamHandler, DEBUG, Formatter, FileHandler, getLogger
-import requests
+from logging import StreamHandler, INFO, DEBUG, Formatter, FileHandler, getLogger
+
 from kaggle.api.kaggle_api_extended import KaggleApi
 from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import client, file
 
 
-LOGGER = getLogger(__name__)
+logger = getLogger(__name__)
+log_fmt = Formatter(
+    '%(asctime)s %(name)s %(lineno)d [%(levelname)s][%(funcName)s] %(message)s')
+# info
+handler = StreamHandler()
+handler.setLevel(INFO)
+handler.setFormatter(log_fmt)
+logger.addHandler(handler)
+logger.setLevel(INFO)
+# debug
+handler = StreamHandler()
+handler.setLevel(DEBUG)
+handler.setFormatter(log_fmt)
+logger.addHandler(handler)
+logger.setLevel(DEBUG)
 
-LOCAL = False
 
-if LOCAL:
-    import config
-    STORE = file.Storage('credentials/token.json')
-    CREDS = STORE.get()
-    SERVICE = build('calendar', 'v3', http=CREDS.authorize(Http()))
-else:
-    CONTENTS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
-    CREDS = client.Credentials.new_from_json(CONTENTS)
-    SERVICE = build('calendar', 'v3', http=CREDS.authorize(Http()))
-
-SLACK_WEBHOOK_URL = os.environ.get('SLACK_WEBHOOK_URL')
+def new_calendar_service():
+    contents = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+    creds = client.Credentials.new_from_json(contents)
+    service = build('calendar', 'v3', http=creds.authorize(Http()))
+    return service
 
 
 def open_json(path):
@@ -35,97 +41,80 @@ def open_json(path):
 
         msg = 'Load {}'.format(path)
         LOGGER.debug(msg)
-
         return f_json
     except Exception as e:
         LOGGER.error(e)
 
 
-CALENDAR_JSON = open_json('calendar.json')
-
-
-def get_competitions_list():
+def get_new_competitions_list():
     try:
         api = KaggleApi()
         api.authenticate()
 
-        now = datetime.datetime.utcnow().isoformat() + 'Z'
-
-        competitions_info = []
+        competitions_list = []
         for info in api.competitions_list():
-            deadline = getattr(info, 'deadline')
-            deadline = datetime.datetime.strftime(
-                deadline, '%Y-%m-%d %H:%M:%S')
-            if now <= deadline:
-                competitions_info.append(info)
-        return competitions_info
+            start_date = getattr(info, 'enabledDate')
+
+            # assume to run once a day
+            pre_date = datetime.datetime.utcnow() - datetime.timedelta(days=1)
+
+            if start_date >= pre_date:
+                competitions_list.append(info)
+        return competitions_list
+
     except Exception as e:
-        LOGGER.error(e)
+        logger.error(e)
 
 
-def create_events(competitions_list):
-    for competition_info in competitions_list:
-        created_flg = False
-        calendar_list = get_calendar_list(competition_info)
-
-        for calendar_name in calendar_list:
-            competition_name = getattr(competition_info, 'title')
-            calendar_id = CALENDAR_JSON[calendar_name]['id']
-            if not event_exists(calendar_id, competition_name):
-                body = get_calendar_body(competition_info, calendar_name)
-                try:
-                    event = SERVICE.events().insert(calendarId=calendar_id, body=body).execute()
-                    created_flg = True
-
-                    msg = 'Create event. calendar id: {}, competitions name: {}'.format(
-                        calendar_id, competition_name)
-                    LOGGER.debug(msg)
-                except Exception as e:
-                    LOGGER.error('{}: {}\n{}'.format(calendar_name, body, e))
-
-        if created_flg:
-            post_slack(competition_info)
-
-
-def get_event_name_list(calendar_id=CALENDAR_JSON['all']['id']):
-    now = datetime.datetime.utcnow().isoformat() + 'Z'
-
+def get_progress_competitions_list():
     try:
-        result = SERVICE.events().list(
-            calendarId=calendar_id, timeMin=now).execute()
+        api = KaggleApi()
+        api.authenticate()
+
+        competitions_list = []
+        for info in api.competitions_list():
+            end_date = getattr(info, 'deadline')
+
+            # assume to run once a day
+            now_date = datetime.datetime.utcnow()
+
+            if end_date >= now_date:
+                competitions_list.append(info)
+        return competitions_list
+
     except Exception as e:
-        LOGGER.error(e)
-
-    events = result.get('items', [])
-    events_name = []
-    for event in events:
-        events_name.append(event['summary'])
-    return events_name
+        logger.error(e)
 
 
-def event_exists(calendar_id, q):
-    now = datetime.datetime.utcnow()
-    # avoid make 2 events in 2 stage competition
-    last_week = now - datetime.timedelta(days=7)
-    last_week = last_week.isoformat() + 'Z'
+def create_event(competition):
+    calendar_list = get_calendar_list(competition)
 
-    try:
-        result = SERVICE.events().list(calendarId=calendar_id,
-                                       q=q, timeMin=last_week).execute()
-    except Exception as e:
-        LOGGER.error(e)
+    for calendar_name in calendar_list:
+        competition_name = getattr(competition, 'title')
+        calendar_json = open_json('calendar.json')
+        calendar_id = calendar_json[calendar_name]['id']
+        body = get_calendar_body(competition, calendar_name)
 
-    if not result['items']:
-        return False
-    return True
+        try:
+            service = new_calendar_service()
+            event = service.events().insert(calendarId=calendar_id, body=body).execute()
+
+            msg = 'Create event. calendar id: {}, competitions name: {}'.format(
+                calendar_id, competition_name)
+            LOGGER.debug(msg)
+
+        except Exception as e:
+            logger.error('{}: {}\n{}'.format(calendar_name, body, e))
 
 
 def get_calendar_list(info):
-    calendar_list = [CALENDAR_JSON['all']['name']]
+    calendar_json = open_json('calendar.json')
+
+    calendar_list = [calendar_json['all']['name']]
 
     awards_points = getattr(info, 'awardsPoints')
     if awards_points:
-        calendar_list.append(CALENDAR_JSON['awards_points']['name'])
+        calendar_list.append(calendar_json['awards_points']['name'])
     else:
         return calendar_list
 
@@ -134,13 +123,13 @@ def get_calendar_list(info):
 
     # tabular / text / image / audio
     is_etc_data = True
-    for calendar in CALENDAR_JSON:
-        if CALENDAR_JSON[calendar]['data'] in tags:
-            calendar_list.append(CALENDAR_JSON[calendar]['name'])
+    for calendar in calendar_json:
+        if calendar_json[calendar]['data'] in tags:
+            calendar_list.append(calendar_json[calendar]['name'])
             is_etc_data = False
 
     if is_etc_data:
-        calendar_list.append(CALENDAR_JSON['etc']['name'])
+        calendar_list.append(calendar_json['etc']['name'])
 
     return calendar_list
 
@@ -148,30 +137,23 @@ def get_calendar_list(info):
 def get_calendar_body(competition_info, calendar_name):
     summary = getattr(competition_info, 'title')
 
-    # key_list = ['description', 'evaluationMetric', 'isKernelsSubmissionsOnly', 'tags', 'url']
-    # description = ''
-    # for key in dir(info):
-    #     if key in key_list:
-    #         description += '{}: {}\n'.format(key,
-    #                                             getattr(info, key))
     description = getattr(competition_info, 'url')
     description = description.replace(':80', '')
 
     start_date = getattr(competition_info, 'enabledDate')
-    start_date = timezone('UTC').localize(start_date)
     start_date = start_date.isoformat()
 
     end_date = getattr(competition_info, 'deadline')
-    end_date = timezone('UTC').localize(end_date)
     end_date = end_date.isoformat()
 
     # Different colors depending on whether there is awards points
+    calendar_json = open_json('calendar.json')
     if getattr(competition_info, 'awardsPoints'):
-        color_id = CALENDAR_JSON[calendar_name]['colorId_1']
+        color_id = calendar_json[calendar_name]['colorId_1']
     else:
-        color_id = CALENDAR_JSON[calendar_name]['colorId_2']
+        color_id = calendar_json[calendar_name]['colorId_2']
 
-    body = open_json('format/calendar_insert.json')
+    body = open_json('calendar_format.json')
 
     body['summary'] = summary
     body['description'] = description
@@ -182,51 +164,22 @@ def get_calendar_body(competition_info, calendar_name):
     return body
 
 
-def post_slack(info):
-    title = getattr(info, 'title')
-    value = getattr(info, 'url')
-
-    body = open_json('format/slack_post.json')
-    body['attachments'][0]['fields'][0]['title'] = title
-    body['attachments'][0]['fields'][0]['value'] = value
-
+def delete_all_event(calendar_id):
     try:
-        r = requests.post(SLACK_WEBHOOK_URL, data=json.dumps(body))
-        msg = 'Post Slack. title: {}, value: {}'.format(title, value)
-        LOGGER.debug(msg)
-    except Exception as e:
-        LOGGER.error(e)
-
-
-def deleteAllEvent(calendar_id):
-    try:
-        result = SERVICE.events().list(calendarId=calendar_id).execute()
+        service = new_calendar_service()
+        result = service.events().list(calendarId=calendar_id).execute()
         for event in result['items']:
-            result = SERVICE.events().delete(
+            result = service.events().delete(
                 calendarId=calendar_id, eventId=event['id']).execute()
-        print('delete: {}'.format(event['id']))
+        logger.debug('delete: {}'.format(event['id']))
     except Exception as e:
-        print('{}: {}'.format(calendar_id, e))
+        logger.error('{}: {}'.format(calendar_id, e))
 
 
-def main():
-    log_fmt = Formatter(
-        '%(asctime)s %(name)s %(lineno)d [%(levelname)s][%(funcName)s] %(message)s ')
-    handler = StreamHandler()
-    handler.setLevel('INFO')
-    handler.setFormatter(log_fmt)
-    LOGGER.addHandler(handler)
+if __name__ == "__main__":
+    # If you run for the first time, run this function
+    # competitions_list = get_progress_competitions_list()
+    competitions_list = get_new_competitions_list()
 
-    handler = StreamHandler()
-    handler.setLevel(DEBUG)
-    handler.setFormatter(log_fmt)
-    LOGGER.addHandler(handler)
-
-    competitions_list = get_competitions_list()
-    create_events(competitions_list)
-
-
-main()
-# for i in CALENDAR_JSON:
-# print(CALENDAR_JSON[i]['id'])
-# deleteAllEvent(CALENDAR_JSON[i]['id'])
+    for competition in competitions_list:
+        create_event(competition)
