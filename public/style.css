@@ -1,5 +1,5 @@
 body{
-    background-color: rgba(197, 237, 255, 0.959)
+    background-color: rgba(197, 237, 255, 0.959);
 }
 
 .link{
@@ -9,9 +9,20 @@ body{
 }
 
 h1{
+    font-size: 40px;
     text-align: center;
     color: #565656;
-    margin-top: 2px;
+}
+
+.header{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #aaa4;
+}
+
+* {
+    margin: 0px;
+    padding: 0px;
 }
 
 iframe{
@@ -19,18 +30,15 @@ iframe{
     margin: auto;
 }
 
-/*タブ切り替え全体のスタイル*/
 .tabs {
-    margin-top: 50px;
     padding-bottom: 40px;
     background-color: rgb(235, 255, 250);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    width: 90%;
+    width: 80%;
     height: 600px;
-    margin: 0 auto;
+    margin: auto;
 }
 
-/*タブのスタイル*/
 .tab_item {
     width: calc(100%/7);
     height: 50px;
@@ -46,16 +54,15 @@ iframe{
     font-weight: bold;
     transition: all 0.2s ease;
 }
+
 .tab_item:hover {
     opacity: 0.75;
 }
 
-/*ラジオボタンを全て消す*/
 input[name="tab_item"] {
     display: none;
 }
 
-/*タブ切り替えの中身のスタイル*/
 .tab_content {
     display: none;
     padding: 20px 20px 0;
@@ -63,8 +70,6 @@ input[name="tab_item"] {
     overflow: hidden;
 }
 
-
-/* 選択されているタブのコンテンツのみを表示 */
 #all:checked ~ #all_content,
 #tabular:checked ~ #tabular_content,
 #text:checked ~ #text_content,
@@ -75,7 +80,6 @@ input[name="tab_item"] {
     display: block;
 }
 
-/*選択されているタブのスタイルを変える*/
 .tabs input:checked + .tab_item {
 background-color: #5ab4bd;
     color: #fff;
