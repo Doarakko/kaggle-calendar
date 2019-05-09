@@ -10,10 +10,6 @@
         "competition"
     ],
         "env": {
-            "SLACK_WEBHOOK_URL": {
-                "description": "You only need to enter slack or line.",
-                "value": "your webhook url"
-            },
             "GOOGLE_APPLICATION_CREDENTIALS": {
                 "description": "Get in Google Cloud console",
                 "value": "json format"
@@ -36,6 +32,6 @@
             }
         ],
         "addons": [
-            "scheduler"
+            "scheduler:standard"
         ]
 }
