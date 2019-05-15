@@ -40,10 +40,10 @@ def open_json(path):
             f_json = json.loads(f_json)
 
         msg = 'Load {}'.format(path)
-        LOGGER.debug(msg)
+        logger.debug(msg)
         return f_json
     except Exception as e:
-        LOGGER.error(e)
+        logger.error(e)
 
 
 def get_new_competitions_list():
@@ -101,7 +101,7 @@ def create_event(competition):
 
             msg = 'Create event. calendar id: {}, competitions name: {}'.format(
                 calendar_id, competition_name)
-            LOGGER.debug(msg)
+            logger.debug(msg)
 
         except Exception as e:
             logger.error('{}: {}\n{}'.format(calendar_name, body, e))
