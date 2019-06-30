@@ -3,7 +3,8 @@ import json
 import datetime
 from logging import StreamHandler, INFO, DEBUG, Formatter, FileHandler, getLogger
 
-from kaggle.api.kaggle_api_extended import KaggleApi
+# import dotenv
+from kaggle import KaggleApi
 from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import client, file
