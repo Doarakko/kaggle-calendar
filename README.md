@@ -1,7 +1,7 @@
 # [Kaggle Calendar](https://kaggle-calendar.herokuapp.com/)
 Kaggle calendar using Kaggle API and Google Calendar API.
 ## Requirements
-- Python 3
+- Python 3.6
 - pipenv
 - Kaggle API
 - Google Calendar API
