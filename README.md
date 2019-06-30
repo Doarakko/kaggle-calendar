@@ -2,9 +2,7 @@
 Kaggle calendar using Kaggle API and Google Calendar API.
 ## Requirements
 - Python 3
-    - google-api-python-client
-    - kaggle
-- pip
+- pipenv
 - Kaggle API
 - Google Calendar API
 
@@ -17,7 +15,7 @@ $ cd kaggle-calendar
 
 2. Install Python library
 ```
-$ pip install -r requirements.txt
+$ pipnv shell
 ```
 
 3. Enter your environment variables
