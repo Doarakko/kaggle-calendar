@@ -122,7 +122,7 @@ def get_calendar_list(info):
     # Class Tag convert to str
     tags = [str(tag) for tag in getattr(info, 'tags')]
 
-    # tabular / text / image / audio
+    # tabular / text / image
     is_etc_data = True
     for calendar in calendar_json:
         if calendar_json[calendar]['data'] in tags:
