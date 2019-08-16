@@ -1,5 +1,8 @@
 # [Kaggle Calendar](https://kaggle-calendar.herokuapp.com/)
 Kaggle calendar using Kaggle API and Google Calendar API.
+
+![sample](https://doarakko.github.io/img/kaggle-calendar-sample.jpg)
+
 ## Requirements
 - Python 3.6
 - pipenv
