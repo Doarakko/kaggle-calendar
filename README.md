@@ -1,7 +1,7 @@
 # [Kaggle Calendar](https://kaggle-calendar.herokuapp.com/)
 Kaggle calendar using Kaggle API and Google Calendar API.
 
-![sample](https://doarakko.github.io/img/kaggle-calendar-sample.jpg)
+[![sample](https://doarakko.github.io/img/kaggle-calendar-sample.jpg)](https://kaggle-calendar.herokuapp.com/)
 
 ## Requirements
 - Python 3.6
